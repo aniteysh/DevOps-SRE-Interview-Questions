@@ -1,5 +1,7 @@
 1. If a team is facing slow image download (pull) from Artifact Registry in a specific region, how would you identify the problem and improve performance across all regions?
+
 **Solution:**
+
 Immediate Diagnosis
  - Network & Routing: Check if traffic is routing over the public internet instead of private endpoints (like Private Service Connect/VPC endpoints), or if DNS is resolving to a distant regional endpoint.
  - Storage & Node Bottlenecks: Verify if disk IOPS or network bandwidth on the worker nodes are saturated during unpacking, or if the registry is hitting API rate limits/throttling.
@@ -10,7 +12,9 @@ Architectural Fix
 - Node Caching & P2P: Optimize container runtime caching and deploy tools like Dragonfly for peer-to-peer layer sharing across large cluster nodes.
 - Image Optimization: Enforce multi-stage builds and distroless base images to keep layer footprints minimal globally.”
 2. After an OS update via MIG rolling update, a stateful database shows latency spikes and split-brain issues. How would you diagnose the root cause, mitigate immediately, and design a safer update process for future?
+
 **Solution:**
+
 Diagnose Root Cause
 - Check Node Lifecycle & Quorum: A MIG rolling update destroys and replaces instances one by one. If it replaced quorum nodes simultaneously or too quickly, the database lost consensus (split-brain).
 - Storage & Network Bottlenecks: Check if the new instances attached existing persistent disks correctly, or if IOPS throttling/network saturation caused replication lag.
