@@ -33,6 +33,15 @@
 
 
 3. What happens if two VPCs have overlapping IP (CIDR) ranges when trying to create a VPC peering connection? How can you fix this issue?
+
+  **Solution:**
+
+  The cloud provider (AWS, GCP, Azure) will reject the VPC peering request outright. Even if a loophole allowed it, routing tables would break because the hypervisor wouldn't know which path to take for the overlapping destination range (routing ambiguity).
+  How to Fix It
+  - CIDR Re-addressing (Best Practice): Plan a migration window to re-IP one of the VPCs to use a non-overlapping CIDR block.
+  - Use PrivateLink / Private Service Connect (Alternative): If you can't change the IPs, don't use VPC peering. Instead, use an Interface VPC Endpoint / Private Service Connect with an Internal Load Balancer. This allows secure, cross-VPC communication using independent proxy IPs without needing non-overlapping network ranges.
+
+
 4. You are designing egress controls for multiple VPCs that need to access external APIs while restricting general internet access. Compare using centralized NAT gateways (via a transit gateway / hub) versus VPC endpoints (private service endpoints). Explain the trade-offs in terms of security, cost, and operations.
 5. Design a multi-tenant VPC networking model for a SaaS platform that isolates tenant networks, allows optional connectivity between selected tenants, and supports centralized inspection for outbound traffic. Explain the network design, how you would prevent IP overlap, enforce tenant isolation, manage controlled tenant-to-tenant connectivity, and ensure, the solution scales efficiently with minimal opérational overhead.
 6. A downstream service shows intermittent 500 errors, but traces indicate that requests are timing out before the error is returned. Explain how you would use tracing to identify whether the issue is in the downstream service, network, or client, and what other signals (metrics/logs) you would check to confirm the cause.
