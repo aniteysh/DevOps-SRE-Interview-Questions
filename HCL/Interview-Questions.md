@@ -3,14 +3,15 @@
 **Solution:**
 
 Immediate Diagnosis
- - Network & Routing: Check if traffic is routing over the public internet instead of private endpoints (like Private Service Connect/VPC endpoints), or if DNS is resolving to a distant regional endpoint.
- - Storage & Node Bottlenecks: Verify if disk IOPS or network bandwidth on the worker nodes are saturated during unpacking, or if the registry is hitting API rate limits/throttling.
+- Network & Routing: Check if traffic is routing over the public internet instead of private endpoints (like Private Service Connect/VPC endpoints), or if DNS is resolving to a distant regional endpoint.
+- Storage & Node Bottlenecks: Verify if disk IOPS or network bandwidth on the worker nodes are saturated during unpacking, or if the registry is hitting API rate limits/throttling.
 - Image Footprint: Inspect image size and layer count to see if monolithic layers are causing the slowdown.
+
 Architectural Fix
 - Geo-Replication: Configure multi-region replication so worker nodes always pull locally within the same region over cloud backbone networks.
 - Lazy Pulling: Implement lazy-pulling using formats like eStargz so containers start immediately while fetching remaining layers asynchronously.
 - Node Caching & P2P: Optimize container runtime caching and deploy tools like Dragonfly for peer-to-peer layer sharing across large cluster nodes.
-- Image Optimization: Enforce multi-stage builds and distroless base images to keep layer footprints minimal globally.”
+- Image Optimization: Enforce multi-stage builds and distroless base images to keep layer footprints minimal globally.
 2. After an OS update via MIG rolling update, a stateful database shows latency spikes and split-brain issues. How would you diagnose the root cause, mitigate immediately, and design a safer update process for future?
 
 **Solution:**
