@@ -2,32 +2,36 @@
 
   **Solution:**
 
-  Immediate Diagnosis
+  Immediate Diagnosis:
   - Network & Routing: Check if traffic is routing over the public internet instead of private endpoints (like Private Service Connect/VPC endpoints), or if DNS is        resolving to a distant regional endpoint.
   - Storage & Node Bottlenecks: Verify if disk IOPS or network bandwidth on the worker nodes are saturated during unpacking, or if the registry is hitting API rate limits/throttling.
   - Image Footprint: Inspect image size and layer count to see if monolithic layers are causing the slowdown.
 
-  Architectural Fix
+  Architectural Fix:
   - Geo-Replication: Configure multi-region replication so worker nodes always pull locally within the same region over cloud backbone networks.
   - Lazy Pulling: Implement lazy-pulling using formats like eStargz so containers start immediately while fetching remaining layers asynchronously.
   - Node Caching & P2P: Optimize container runtime caching and deploy tools like Dragonfly for peer-to-peer layer sharing across large cluster nodes.
   - Image Optimization: Enforce multi-stage builds and distroless base images to keep layer footprints minimal globally.
+
+  
 2. After an OS update via MIG rolling update, a stateful database shows latency spikes and split-brain issues. How would you diagnose the root cause, mitigate immediately, and design a safer update process for future?
 
   **Solution:**
 
-  Diagnose Root Cause
+  Diagnose Root Cause:
   - Check Node Lifecycle & Quorum: A MIG rolling update destroys and replaces instances one by one. If it replaced quorum nodes simultaneously or too quickly, the database lost consensus (split-brain).
   - Storage & Network Bottlenecks: Check if the new instances attached existing persistent disks correctly, or if IOPS throttling/network saturation caused replication lag.
   - Kernel/OS Regressions: Look for kernel parameter changes (e.g., limits on file descriptors, swap settings, or TCP backlog) in the new OS image that hurt database performance.
-  
-  Immediate Mitigation
+
+  Immediate Mitigation:
   - Restore Quorum: Isolate the unhealthy nodes, ensure the remaining healthy primary and replicas form a stable cluster, and fence off any rogue nodes to stop split-brain write conflicts.
   - Rollback if Needed: Revert the MIG template to the previous golden image and roll back the instances if the OS update itself introduced a performance bug.
   Safer Architecture for Future
   - Custom Update Policies: Configure the MIG with strict max-surge and max-unavailable settings (e.g., max-unavailable: 0) to ensure zero downtime and strict one-at-a-node replacement.
   - Stateful-Aware Orchestration: Move away from basic MIG rolling updates for stateful workloads. Use operator-managed databases (like StatefulSets with proper pod disruption budgets) that gracefully handle leader elections before a node is terminated.
   - Canary Updates: Always test OS updates on a single non-production replica first to catch kernel or performance regressions before rolling out to the primary cluster.
+
+
 3. What happens if two VPCs have overlapping IP (CIDR) ranges when trying to create a VPC peering connection? How can you fix this issue?
 4. You are designing egress controls for multiple VPCs that need to access external APIs while restricting general internet access. Compare using centralized NAT gateways (via a transit gateway / hub) versus VPC endpoints (private service endpoints). Explain the trade-offs in terms of security, cost, and operations.
 5. Design a multi-tenant VPC networking model for a SaaS platform that isolates tenant networks, allows optional connectivity between selected tenants, and supports centralized inspection for outbound traffic. Explain the network design, how you would prevent IP overlap, enforce tenant isolation, manage controlled tenant-to-tenant connectivity, and ensure, the solution scales efficiently with minimal opérational overhead.
