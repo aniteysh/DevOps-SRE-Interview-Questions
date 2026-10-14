@@ -1,5 +1,3 @@
-HCL Interview Questions
-
 1. If a team is facing slow image download (pull) from Artifact Registry in a specific region, how would you identify the problem and improve performance across all regions?
 2. After an OS update via MIG rolling update, a stateful database shows latency spikes and split-brain issues. How would you diagnose the root cause, mitigate immediately, and design a safer update process for future?
 3. What happens if two VPCs have overlapping IP (CIDR) ranges when trying to create a VPC peering connection? How can you fix this issue?
@@ -16,15 +14,21 @@ HCL Interview Questions
 14. A Cloud Deploy pipeline performs hourly promotions to production, but outages have increased due to traffic growth. The pipeline uses canary releases without automated traffic control or rollback. Design a prioritized remediation plan to quickly reduce user impact and improve long-term deployment safety. Explain trade-offs and how you would measure success.
 15. A support engineer discovers that failed messages are no longer visible in the primary subscription. What would you Investigate?
 16. An application deployment fails even though the deployment template is valid. The error references organizational restrictions. What would you investigate? gcloud deployment-manager deployments create app-deployOutput:Request violates organization policy.
-17. Review the following workflow extracted from a repository that intends to call a reusable workflow in another repo. Identify the issues that will prevent the call from succeeding, explain the impact of each, and propose corrected YAML.*codenamé: Use Template
-18. on:
-19. workflow_dispatch:
-20. jobs: call:
-21. uses: org/repo/.github/workflows/template.yml@main 
-22. with:
-    1. env: production 
-    2. secrets:
-    3. API_KEY: ${{ secrets.API_KEY }}
+17. Review the following workflow extracted from a repository that intends to call a reusable workflow in another repo. Identify the issues that will prevent the call from succeeding, explain the impact of each, and propose corrected YAML.
+
+```yaml
+on:
+  workflow_dispatch:
+
+jobs:
+  call:
+    uses: org/repo/.github/workflows/template.yml@main
+    with:
+      env: production
+    secrets:
+      API_KEY: ${{ secrets.API_KEY }}
+```
+
 23. Design an approach using GitHub Actions to perform authenticated, auditable deployments to multiple cloud accounts (e.g., staging and production) while minimizing stored secrets and ensuring each deploy is tied to a specific Cl artifact and run. Explain how you enforce least privilege and how you correlate an incident back to the initiating workflow run.
 24. Discuss the trade-offs and risk model of moving critical production deployment steps from GitHub Actions workflows running on hosted runners to a separate deployment service triggered by GitHub webhooks. Include security, reliability, auditability, and developer experience considerations.
 25. How does the Deployment controller perform a rolling update?
@@ -37,16 +41,16 @@ HCL Interview Questions
     4. Publishes the Terraform plan artifact.
     5. Requires approval before deployment to Production.
 29. A frontend application cannot reach a backend Service using its DNS name after a deployment. What troubleshooting steps would you perform?
-30. Create RBAC resources for a ServiceAccount named support-engineer.mRequirements:
-    1. Namespace: production-support
-    2. The ServiceAccount must be allowed to:
-    3. Get Pods
-    4. List Pods
-    5. Watch Pods
-    6. Read Pod logs
-    7. The ServiceAccount must not be able to:
-    8. Create Pods
-    9. Delete Pods
+30. Create RBAC resources for a ServiceAccount named support-engineer.
+    - Namespace: production-support
+    - Allowed:
+      - Get Pods
+      - List Pods
+      - Watch Pods
+      - Read Pod logs
+    - Not allowed:
+      - Create Pods
+      - Delete Pods
 31. A service account token is suspected to be compromised. The application requires continued operation while the incident is investigated. What actions would you recommend?
 32. Terraform fails when referencing resource attributes. What could be wrong?
 33. Discuss the consequences and recovery options if a Terraform apply failed halfway through due to provider exception, leaving some resources created and state not updated. How do you safely reconcile state and infrastructure?
